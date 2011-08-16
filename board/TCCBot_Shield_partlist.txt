@@ -6,15 +6,15 @@ EAGLE Version 5.11.0 Copyright (c) 1988-2010 CadSoft
 
 Part     Value                 Device                Package               Library        Sheet
 
-C1                             C5/5.5                C5B5.5                capacitor-wima 1
-C2                             C5/5.5                C5B5.5                capacitor-wima 1
-C3                             C5/5.5                C5B5.5                capacitor-wima 1
-C4                             C5/5.5                C5B5.5                capacitor-wima 1
+C1       0.1uF                 C5/5.5                C5B5.5                capacitor-wima 1
+C2       0.1uF                 C5/5.5                C5B5.5                capacitor-wima 1
+C3       0.1uF                 C5/5.5                C5B5.5                capacitor-wima 1
+C4       0.1uF                 C5/5.5                C5B5.5                capacitor-wima 1
 C5       100uF                 CPOL-EUE2.5-5         E2,5-5                rcl            1
 C6       100uF                 CPOL-EUE2.5-5         E2,5-5                rcl            1
 IC2      74HC00N               74HC00N               DIL14                 74xx-eu        1
-IC3                            L293E                 DIL16                 texas          1
-JP1                            M023.5MM              SCREWTERMINAL-3.5MM-2 SparkFun       1
+IC3      sn754410              sn754410              DIL16                 texas          1
+JP1      5mm Screw Terminal    M023.5MM              SCREWTERMINAL-3.5MM-2 SparkFun       1
 JP2                            M02PTH                1X02                  SparkFun       1
 JP3                            M04PTH                1X04                  SparkFun       1
 JP4                            M03PTH                1X03                  SparkFun       1
@@ -31,7 +31,7 @@ JP14                           M05PTH                1X05                  Spark
 JP15                           M03PTH                1X03                  SparkFun       1
 JP16                           M03PTH                1X03                  SparkFun       1
 MOTORS   motors                PINHD-1X4             1X04                  pinhead        1
-PWR                            LED3MM                LED3MM                led            1
+PWR      3mm LED               LED3MM                LED3MM                led            1
 R2       100                   R-EU_0204/7           0204/7                rcl            1
 R3       100K                  R-EU_0204/7           0204/7                rcl            1
 R4       100K                  R-EU_0204/7           0204/7                rcl            1
@@ -39,4 +39,3 @@ R5       100K                  R-EU_0204/7           0204/7                rcl  
 R6       100K                  R-EU_0204/7           0204/7                rcl            1
 R7       220-1k                R-EU_0204/7           0204/7                rcl            1
 S1       SWITCH-MOMENTARY-2PTH SWITCH-MOMENTARY-2PTH TACTILE-PTH           SparkFun       1
-U$1      ARDUINOUNO            ARDUINOUNO            ARDUINO               adafruit       1

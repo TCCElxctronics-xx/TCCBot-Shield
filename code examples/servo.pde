@@ -3,6 +3,8 @@
 // As it is sweeping it prints the value to 
 // serial via the USB.
 // Pins 5 & 6 are servo ready pins.
+// For more info http://arduino.cc/en/Reference/Servo
+
 
 #include <Servo.h> 
  
