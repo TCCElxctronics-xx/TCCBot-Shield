@@ -1,17 +1,16 @@
 //Initiate motors/////////////////////////////////////////////////////////////////
-	int dirA1=3;
-	int dirA2=4;
-	int dirB1=6;
-	int dirB2=7;
+	int dirA=12;
+	int dirB=13;
 	int speedA=10;
 	int speedB=11;
 
 
 //Initiate linePin, create variable & array for processing////////////////////////
-	int linePin = 8;
+	int linePin1 = 8;
+	int linePin2 = 9;
 
 //Initiate pingPin, create variable & array for processing////////////////////////
-	int pingPin = 2;
+	int pingPin = 3;
 	float pingVal[10];	 // array to store first 10 values coming from the sensor
 	float pingValSum=0;	 // sum of first 10 readings
 	float pingValAvg=0;	 // average of the first 10 readings
@@ -28,10 +27,8 @@ void setup()
 	Serial.begin(9600);
 
 // set the motor pins as outputs///////////////////////////////////////////////
-	pinMode(dirA1, OUTPUT);
-	pinMode(dirA2, OUTPUT);
-	pinMode(dirB1, OUTPUT);
-	pinMode(dirB2, OUTPUT);
+	pinMode(dirA, OUTPUT);
+	pinMode(dirB, OUTPUT);
   	pinMode(speedA, OUTPUT);
   	pinMode(speedB, OUTPUT);
 }
@@ -41,7 +38,8 @@ void setup()
 void loop(){ 
 
 //line detector//////////////////////////////////////////
-	int QRE_Value = readQD();
+	int QRE_Value1 = readQD1();
+	int QRE_Value2 = readQD2();
 
 //begin emit ping////////////////////////////////////////
 	pinMode(pingPin, OUTPUT);
@@ -61,35 +59,33 @@ void loop(){
   	Serial.println(pingValAvg);
 
 //Ping detection Attack or Hunt//////////////////////////
-  	if (pingValAvg <=4000 && QRE_Value <= 100)
+  	if (pingValAvg <=4000 && QRE_Value1 <= 100)
 { 
     	goAttack();
     	Serial.println("Attack");
 }
 
-  		else if (pingValAvg >4001 && QRE_Value <= 100)
+  		else if (pingValAvg >4001 && QRE_Value1 <= 100)
   		{ 
     			goHunt();
     			Serial.println("Hunt");  
   		}
 
-  			else if (QRE_Value > 101)
+  			else if (QRE_Value1 > 101)
   			{ 
     			survive();
     			Serial.println("Survive");
   			} 
 
   	Serial.println("line_value");
-  	Serial.println(QRE_Value);
+  	Serial.println(QRE_Value1);
 }
 
 //Attack Mode///////////////////////////////////////////
 void goAttack()
 {
-  	digitalWrite(dirA1, HIGH);
-  	digitalWrite(dirA2, LOW);
-  	digitalWrite(dirB1, HIGH);
-  	digitalWrite(dirB2, LOW);
+  	digitalWrite(dirA, HIGH);
+  	digitalWrite(dirB, HIGH);
   	analogWrite(speedA, 255);
   	analogWrite(speedB, 255);
 }
@@ -97,10 +93,8 @@ void goAttack()
 //Hunt Mode/////////////////////////////////////////////
 void goHunt()
 {
-  	digitalWrite(dirA1, LOW);
-  	digitalWrite(dirA2, HIGH);
-  	digitalWrite(dirB1, HIGH);
-  	digitalWrite(dirB2, LOW);
+  	digitalWrite(dirA, LOW);
+  	digitalWrite(dirB, HIGH);
   	analogWrite(speedA, 200);
   	analogWrite(speedB, 200);
 }
@@ -108,25 +102,36 @@ void goHunt()
 //Survive Mode//////////////////////////////////////////
 void survive()
 {
-  digitalWrite(dirA1, LOW);
-  digitalWrite(dirA2, HIGH);
-  digitalWrite(dirB1, LOW);
-  digitalWrite(dirB2, HIGH);
+  digitalWrite(dirA, LOW);
+  digitalWrite(dirB, LOW);
   analogWrite(speedA, 255);
   analogWrite(speedB, 255);
   delayMicroseconds(100);
 }
   
-int readQD(){
-	pinMode(linePin, OUTPUT);
-    	digitalWrite(linePin, HIGH);
+int readQD1(){
+	pinMode(linePin1, OUTPUT);
+    	digitalWrite(linePin1, HIGH);
     	delayMicroseconds(10);
 
 //read line value
-    	pinMode(linePin, INPUT);
+    	pinMode(linePin1, INPUT);
     	long time = micros();
-    	while (digitalRead(linePin) == HIGH && micros() - time < 3000);
+    	while (digitalRead(linePin1) == HIGH && micros() - time < 3000);
     	int diff = micros() - time;
 return diff;
+}
+
+int readQD2(){
+	pinMode(linePin2, OUTPUT);
+    	digitalWrite(linePin2, HIGH);
+    	delayMicroseconds(10);
+
+//read line value
+    	pinMode(linePin2, INPUT);
+    	long time = micros();
+    	while (digitalRead(linePin2) == HIGH && micros() - time < 3000);
+    	int diff = micros() - time;
+return diff;	
 }
 
