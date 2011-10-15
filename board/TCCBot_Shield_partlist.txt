@@ -14,7 +14,7 @@ C5       100uF                 CPOL-EUE2.5-5         E2,5-5                rcl  
 C6       100uF                 CPOL-EUE2.5-5         E2,5-5                rcl            1
 IC2      74HC00N               74HC00N               DIL14                 74xx-eu        1
 IC3      sn754410              sn754410              DIL16                 texas          1
-JP1      5mm Screw Terminal    M023.5MM              SCREWTERMINAL-3.5MM-2 SparkFun       1
+JP1      3.5mm Screw Terminal    M023.5MM              SCREWTERMINAL-3.5MM-2 SparkFun       1
 JP2                            M02PTH                1X02                  SparkFun       1
 JP3                            M04PTH                1X04                  SparkFun       1
 JP4                            M03PTH                1X03                  SparkFun       1
