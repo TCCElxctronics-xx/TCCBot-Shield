@@ -1,137 +1,194 @@
 //Initiate motors/////////////////////////////////////////////////////////////////
-	int dirA=12;
-	int dirB=13;
-	int speedA=10;
-	int speedB=11;
+int dirA=12;                        //high(1) is forward, low(0) is reverse
+int dirB=13;                        //high(1) is forward, low(0) is reverse
+int speedA=10;                      //8 bit pwm 0-255
+int speedB=11;                      //8 bit pwm 0-255
 
 
-//Initiate linePin, create variable & array for processing////////////////////////
-	int linePin1 = 8;
-	int linePin2 = 9;
-
-//Initiate pingPin, create variable & array for processing////////////////////////
-	int pingPin = 3;
-	float pingVal[10];	 // array to store first 10 values coming from the sensor
-	float pingValSum=0;	 // sum of first 10 readings
-	float pingValAvg=0;	 // average of the first 10 readings
+//Initiate linePin///////////////////////////////////////////////////////////////
+int linePinR = 8;                  //rear line sesor belongs on digital pin8
+int linePinF = 9;                  //front line sesor belongs on digital pin9
 
 
-//begin process////////////////////////////////////////////////////////////////
+//Initiate irPin for distance finder/////////////////////////////////////////////
+float irPin = 1;                   //distance sensor on analog pin1        
+
+
+//Initiate pingPin, create variable & array for processing for sonar/////////////
+//	int pingPin = 3;          //Parralex Ping belongs on pin3
+//	float pingVal[10];	 // array to store first 10 values coming from the sensor
+//	float pingValSum=0;	 // sum of first 10 readings
+//	float pingValAvg=0;	 // average of the first 10 readings
+
+
+//setup//////////////////////////////////////////////////////////////////////////
 void setup() 
 {
 
-//5 sec delay in microseconds 
-	delay(5000);
+//5 sec delay in microseconds//////////////////////////////////////////////////// 
+delay(5000);
 
-//usb debug   
-	Serial.begin(9600);
+//usb debug//////////////////////////////////////////////////////////////////////   
+Serial.begin(9600);
 
-// set the motor pins as outputs///////////////////////////////////////////////
-	pinMode(dirA, OUTPUT);
-	pinMode(dirB, OUTPUT);
-  	pinMode(speedA, OUTPUT);
-  	pinMode(speedB, OUTPUT);
+
+// set the motor pins as outputs////////////////////////////////////////////////
+pinMode(dirA, OUTPUT);
+pinMode(dirB, OUTPUT);
+pinMode(speedA, OUTPUT);
+pinMode(speedB, OUTPUT);
 }
 
 
-//logic//////////////////////////////////////////////////////////////////////////
+//logic///////////////////////////////////////////////////////////////////////////
 void loop(){ 
 
-//line detector//////////////////////////////////////////
-	int QRE_Value1 = readQD1();
-	int QRE_Value2 = readQD2();
+  
+//line detector//////////////////////////////////////////////////////////////////
+int qreValueR = readQD1();
+int qreValueF = readQD2();
 
-//begin emit ping////////////////////////////////////////
-	pinMode(pingPin, OUTPUT);
-  		digitalWrite(pingPin, LOW);
-  		delayMicroseconds(5);
-  		digitalWrite(pingPin, HIGH);
- 		delayMicroseconds(10);
-  		digitalWrite(pingPin, LOW); 
-  		delayMicroseconds(5); 
 
-//read return ping  
- 	 pinMode(pingPin, INPUT);
-  		pingValAvg = pulseIn(pingPin, HIGH);
+//send line sensor to debugger///////////////////////////////////////////////////////
+//Serial.println(qreValueR);
+//Serial.println(qreValueF);
 
-//send to debugger///////////////////////////////////////
-  	Serial.println("Ping Distance");				
-  	Serial.println(pingValAvg);
 
-//Ping detection Attack or Hunt//////////////////////////
-  	if (pingValAvg <=4000 && QRE_Value1 <= 100)
-{ 
-    	goAttack();
-    	Serial.println("Attack");
+//IR distance sensor/////////////////////////////////////////////////////////////
+float irValue = readIR();
+
+
+//begin sonar emit ping//////////////////////////////////////////////////////////
+//	pinMode(pingPin, OUTPUT);
+//  		digitalWrite(pingPin, LOW);
+// 		delayMicroseconds(2);
+// 		digitalWrite(pingPin, HIGH);
+//		delayMicroseconds(5);
+//  		digitalWrite(pingPin, LOW); 
+
+
+//read sonar return ping////////////////////////////////////////////////////////  
+// 	 pinMode(pingPin, INPUT);
+//  		pingValAvg = pulseIn(pingPin, HIGH);
+
+
+//send sonar to debugger///////////////////////////////////////////////////////
+//  	Serial.println("Ping Distance");				
+//  	Serial.println(pingValAvg);
+
+
+//Ping detection Attack or Hunt///////////////////////////////////////////////
+if (irValue <=70 && qreValueR > 200 && qreValueF > 200){ 
+  goAttack();
+  Serial.println("Attack");
 }
 
-  		else if (pingValAvg >4001 && QRE_Value1 <= 100)
-  		{ 
-    			goHunt();
-    			Serial.println("Hunt");  
-  		}
 
-  			else if (QRE_Value1 > 101)
-  			{ 
-    			survive();
-    			Serial.println("Survive");
-  			} 
+else if (qreValueR <= 200){ 
+  surviveR();
+  Serial.println("SurviveR");
+} 
 
-  	Serial.println("line_value");
-  	Serial.println(QRE_Value1);
+else if (qreValueF <= 200){ 
+  surviveF();
+  Serial.println("SurviveF");
+} 
+else{ 
+  goHunt();
+  Serial.println("Hunt");  
 }
 
-//Attack Mode///////////////////////////////////////////
+}
+
+//Attack Mode//////////////////////////////////////////////////////////////////
 void goAttack()
 {
-  	digitalWrite(dirA, HIGH);
-  	digitalWrite(dirB, HIGH);
-  	analogWrite(speedA, 255);
-  	analogWrite(speedB, 255);
+  digitalWrite(dirA, HIGH);
+  digitalWrite(dirB, HIGH);
+  analogWrite(speedA, 255);
+  analogWrite(speedB, 255);
 }
 
-//Hunt Mode/////////////////////////////////////////////
+
+//Hunt Mode///////////////////////////////////////////////////////////////////
 void goHunt()
 {
-  	digitalWrite(dirA, LOW);
-  	digitalWrite(dirB, HIGH);
-  	analogWrite(speedA, 200);
-  	analogWrite(speedB, 200);
+  digitalWrite(dirA, LOW);
+  digitalWrite(dirB, HIGH);
+  analogWrite(speedA, 200);
+  analogWrite(speedB, 200);
+  delayMicroseconds(200);
+  digitalWrite(dirA, HIGH);
+  digitalWrite(dirB, HIGH);
+  analogWrite(speedA, 200);
+  analogWrite(speedB, 200);   
 }
 
-//Survive Mode//////////////////////////////////////////
-void survive()
+
+//Survive Mode///////////////////////////////////////////////////////////////
+void surviveR()
+{
+  digitalWrite(dirA, HIGH);
+  digitalWrite(dirB, HIGH);
+  analogWrite(speedA, 255);
+  analogWrite(speedB, 255);
+  delayMicroseconds(100);
+  digitalWrite(dirA, LOW);
+  digitalWrite(dirB, HIGH);
+  analogWrite(speedA, 200);
+  analogWrite(speedB, 200);
+  delayMicroseconds(100);
+}
+
+
+void surviveF()
 {
   digitalWrite(dirA, LOW);
   digitalWrite(dirB, LOW);
   analogWrite(speedA, 255);
   analogWrite(speedB, 255);
   delayMicroseconds(100);
+  digitalWrite(dirA, LOW);
+  digitalWrite(dirB, HIGH);
+  analogWrite(speedA, 200);
+  analogWrite(speedB, 200);
+  delayMicroseconds(100);
 }
-  
+ 
+
+//get line value Rear///////////////////////////////////////////////////////  
 int readQD1(){
-	pinMode(linePin1, OUTPUT);
-    	digitalWrite(linePin1, HIGH);
-    	delayMicroseconds(10);
+	pinMode(linePinR, OUTPUT);                                        //set ir as output
+    	digitalWrite(linePinR, HIGH);                                     //turn on ir led
+    	delayMicroseconds(10);                                            //leave on for 10 seconds
 
-//read line value
-    	pinMode(linePin1, INPUT);
-    	long time = micros();
-    	while (digitalRead(linePin1) == HIGH && micros() - time < 3000);
-    	int diff = micros() - time;
-return diff;
+    	pinMode(linePinR, INPUT);                                         //set ir as input
+    	long time = micros();                                             //turn on ir led
+    	while (digitalRead(linePinR) == HIGH && micros() - time < 3000);  //read cap discharge in micros
+    	int diff = (micros() - time)/10;                                       //compare time and micros assign difference to diff
+return diff;                                                              //return diff to the calling function
 }
 
+
+//get line value Front///////////////////////////////////////////////////////
 int readQD2(){
-	pinMode(linePin2, OUTPUT);
-    	digitalWrite(linePin2, HIGH);
-    	delayMicroseconds(10);
+	pinMode(linePinF, OUTPUT);                                        //set ir as output
+    	digitalWrite(linePinF, HIGH);                                     //turn on ir led
+    	delayMicroseconds(10);                                            //leave on for 10 seconds
 
-//read line value
-    	pinMode(linePin2, INPUT);
-    	long time = micros();
-    	while (digitalRead(linePin2) == HIGH && micros() - time < 3000);
-    	int diff = micros() - time;
-return diff;	
-}
+    	pinMode(linePinF, INPUT);                                         //set ir as input
+    	long time = micros();                                             //create local variable time 
+    	while (digitalRead(linePinF) == HIGH && micros() - time < 3000);  //read cap discharge in micros
+    	int diff = (micros() - time)/10;                                       //compare time and micros assign difference to diff
+return diff;	                                                          //return diff to the calling function
+}    
+
+
+//IR distance Sensor //////////////////////////////////////////
+float readIR(){
+      float volts = analogRead(irPin)*0.0048828125;   // value from sensor * (5/1024) - if running 3.3.volts then change 5 to 3.3
+      float distance = 27*pow(volts, -1.10);          // worked out from datasheet 27 = theretical distance / (1/Volts)
+//      Serial.println(distance);                       // print the distance should return value of 1-80cm 
+return distance;
+ }
 
