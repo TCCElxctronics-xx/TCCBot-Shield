@@ -158,37 +158,37 @@ void surviveF()
 
 //get line value Rear///////////////////////////////////////////////////////  
 int readQD1(){
-	pinMode(linePinR, OUTPUT);                                        //set ir as output
-    	digitalWrite(linePinR, HIGH);                                     //turn on ir led
-    	delayMicroseconds(10);                                            //leave on for 10 seconds
+  pinMode(linePinR, OUTPUT);                                        //set ir as output
+  digitalWrite(linePinR, HIGH);                                     //turn on ir led
+  delayMicroseconds(10);                                            //leave on for 10 seconds
 
-    	pinMode(linePinR, INPUT);                                         //set ir as input
-    	long time = micros();                                             //turn on ir led
-    	while (digitalRead(linePinR) == HIGH && micros() - time < 3000);  //read cap discharge in micros
-    	int diff = (micros() - time)/10;                                       //compare time and micros assign difference to diff
+  pinMode(linePinR, INPUT);                                         //set ir as input
+  long time = micros();                                             //turn on ir led
+    while (digitalRead(linePinR) == HIGH && micros() - time < 3000);  //read cap discharge in micros
+    int diff = (micros() - time)/10;                                       //compare time and micros assign difference to diff
 return diff;                                                              //return diff to the calling function
 }
 
 
 //get line value Front///////////////////////////////////////////////////////
 int readQD2(){
-	pinMode(linePinF, OUTPUT);                                        //set ir as output
-    	digitalWrite(linePinF, HIGH);                                     //turn on ir led
-    	delayMicroseconds(10);                                            //leave on for 10 seconds
+  pinMode(linePinF, OUTPUT);                                        //set ir as output
+  digitalWrite(linePinF, HIGH);                                     //turn on ir led
+  delayMicroseconds(10);                                            //leave on for 10 seconds
 
-    	pinMode(linePinF, INPUT);                                         //set ir as input
-    	long time = micros();                                             //create local variable time 
-    	while (digitalRead(linePinF) == HIGH && micros() - time < 3000);  //read cap discharge in micros
-    	int diff = (micros() - time)/10;                                       //compare time and micros assign difference to diff
+  pinMode(linePinF, INPUT);                                         //set ir as input
+  long time = micros();                                             //create local variable time 
+    while (digitalRead(linePinF) == HIGH && micros() - time < 3000);  //read cap discharge in micros
+    int diff = (micros() - time)/10;                                       //compare time and micros assign difference to diff
 return diff;	                                                          //return diff to the calling function
 }    
 
 
 //IR distance Sensor //////////////////////////////////////////
 float readIR(){
-      float volts = analogRead(irPin)*0.0048828125;   // value from sensor * (5/1024) - if running 3.3.volts then change 5 to 3.3
-      float distance = 27*pow(volts, -1.10);          // worked out from datasheet 27 = theretical distance / (1/Volts)
-//      Serial.println(distance);                       // print the distance should return value of 1-80cm 
+  float volts = analogRead(irPin)*0.0048828125;   // value from sensor * (5/1024) - if running 3.3.volts then change 5 to 3.3
+  float distance = 27*pow(volts, -1.10);          // worked out from datasheet 27 = theretical distance / (1/Volts)
+  //Serial.println(distance);                       // print the distance should return value of 1-80cm 
 return distance;
  }
 
